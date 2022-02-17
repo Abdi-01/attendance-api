@@ -1,0 +1,1 @@
+// tipe data file : .jpg, .png, .webp, .jpeg.
