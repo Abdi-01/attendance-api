@@ -11,11 +11,21 @@ App.use(cors());
 App.use(express.json());
 App.use(bearerToken());
 
+const { db } = require(`./config/database`)
+db.getConnection((err, connection) => {
+    if (err) {
+        console.log(`Error Mysql Connection : `, err, message);
+    }
+    console.log(`Connected to MySql Server : ${connection.threadId}`)
+})
+
 App.get("/", (req, res) => {
     res.status(200).send("<h2>Attendance API</h2>")
 })
 // Import Route
+const {attendanceRoute} = require(`./routers`);
 
+App.use(`/attendance`, attendanceRoute)
 
 
 App.listen(PORT, () => console.log("Attendance API Tunning :", PORT))
