@@ -15,7 +15,9 @@ App.get("/", (req, res) => {
     res.status(200).send("<h2>Attendance API</h2>")
 })
 // Import Route
+const { sessionRoute } = require("./routers");
 
+App.use('/session',sessionRoute)
 
 
 App.listen(PORT, () => console.log("Attendance API Tunning :", PORT))
