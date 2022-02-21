@@ -3,7 +3,6 @@ const express = require("express");
 const App = express();
 const cors = require("cors");
 const bearerToken = require("express-bearer-token");
-const {usersRoute} = require("./routers")
 dotenv.config()
 
 const PORT = process.env.PORT;
