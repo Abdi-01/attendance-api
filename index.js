@@ -16,6 +16,9 @@ App.get("/", (req, res) => {
 })
 // Import Route
 
+const { usersRoute } = require('./routers');
+App.use('/users', usersRoute);
+
 
 
 App.listen(PORT, () => console.log("Attendance API Tunning :", PORT))
