@@ -1,34 +1,27 @@
-// KEY TOKEN : boblightning
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 const Crypto = require('crypto');
-// const { decode } = require("punycode");
 
 module.exports = {
-    hashPassword: (pass) => {
-        return Crypto.createHmac("sha256", process.env.CRYPTO_KEY).update(pass).digest("hex");
+    hashPassword : (pass)=>{
+        return Crypto.createHmac('sha256',process.env.CRYPTO_KEY).update(pass).digest('hex');
     },
-
-    createToken: (payload) => {
+    createToken: (payload)=>{
         return jwt.sign(payload, process.env.TOKEN_KEY, {
-            expiresIn: "12h"
+            expiresIn : '12h'
         })
     },
-
-    readToken: (req, res, next) => {
-        jwt.verify(req.token, process.env.TOKEN_KEY, (err, decode) => {
-            if (err) {
+    readToken: (req,res,next)=>{
+        // console.log(req.token);
+        jwt.verify(req.token, process.env.TOKEN_KEY,(err,decode)=>{
+            if(err){
                 res.status(401).send({
-                    message: "User Not Authorization ❌",
-                    success: false,
-                    error: err
+                    message : "Authentication Failed",
+                    success : false,
                 })
             }
-            // hasil penerjemahan token
-            req.dataUser = decode
+            // console.log('decode',decode);
+            req.dataStudent = decode;
             next()
         })
     }
 }
-
-// Encode : Menerjemahkan data asli menjadi data acak baru
-// Decode : Menerjemahkan data acak menjadi data aslinya

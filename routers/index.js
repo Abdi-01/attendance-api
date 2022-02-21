@@ -1,6 +1,7 @@
 // your route
-const usersRoute = require('./usersRoute')
-
+const sessionRoute = require('./sessionRoute')
+const usersRoute = require('./usersRoute');
 module.exports = {
-    usersRoute
+    sessionRoute,
+   usersRoute
 }
