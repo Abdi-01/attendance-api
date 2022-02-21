@@ -1,6 +1,8 @@
 // your controller
+const sessionController = require('./sessionController')
 const usersController = require('./usersController');
 
-module.exports={
-    usersController
+module.exports ={
+    sessionController,
+  usersController
 }
