@@ -1,10 +1,9 @@
-// KEY TOKEN : boblightning
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
+const Crypto = require('crypto');
 
 module.exports = {
     hashPassword : (pass)=>{
-        return crypto.createHmac('sha256',process.env.CRYPTO_KEY).update(pass).digest('hex');
+        return Crypto.createHmac('sha256',process.env.CRYPTO_KEY).update(pass).digest('hex');
     },
     createToken: (payload)=>{
         return jwt.sign(payload, process.env.TOKEN_KEY, {

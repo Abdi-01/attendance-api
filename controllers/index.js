@@ -1,4 +1,3 @@
-// your controller
 const sessionController = require('./sessionController')
 const usersController = require('./usersController');
 
