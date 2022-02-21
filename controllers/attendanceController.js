@@ -17,7 +17,7 @@ module.exports = {
                 }
             }
 
-            console.log(filterQuery)
+            // console.log(filterQuery)
 
             let { _sort, _order, status, start_date, end_date } = req.query
 
