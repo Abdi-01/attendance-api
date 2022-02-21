@@ -1,26 +1,28 @@
 // KEY TOKEN : boblightning
 const jwt = require('jsonwebtoken');
-const Crypto = require('crypto')
+const crypto = require('crypto');
 
 module.exports = {
-
-    createToken: (payload) => {
+    hashPassword : (pass)=>{
+        return crypto.createHmac('sha256',process.env.CRYPTO_KEY).update(pass).digest('hex');
+    },
+    createToken: (payload)=>{
         return jwt.sign(payload, process.env.TOKEN_KEY, {
-            expiresIn: '12h'
+            expiresIn : '12h'
         })
     },
-    readToken: (req, res, next) => {
-        jwt.verify(req.token, process.env.TOKEN_KEY, (err, decode) => {
-            if (err) {
+    readToken: (req,res,next)=>{
+        // console.log(req.token);
+        jwt.verify(req.token, process.env.TOKEN_KEY,(err,decode)=>{
+            if(err){
                 res.status(401).send({
-                    message: 'User not Authorization',
-                    success: false,
-                    error: err
+                    message : "Authentication Failed",
+                    success : false,
                 })
             }
-            req.dataUser = decode
+            // console.log('decode',decode);
+            req.dataStudent = decode;
             next()
         })
     }
-
 }
