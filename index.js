@@ -13,16 +13,22 @@ App.use(bearerToken());
 
 const {db} = require('./config/database')
 db.getConnection((err,connection) => {
-
     if(err){
         console.log(`error mysql:`, err)
     }
-
     console.log(`connection to mysal server : ${connection.threadId}`) 
 })
 
 App.get("/", (req, res) => {
     res.status(200).send("<h2>Attendance API</h2>")
+})
+
+const { db } = require('./config/database')
+db.getConnection((err, connection) => {
+    if(err) {
+        console.log(`err mysql connecntion`, err.message)
+    }
+    console.log(`connected mysql: ${connection.threadId}`)
 })
 // Import Route
 const { sessionRoute,usersRoute,attendanceRoutes } = require("./routers");

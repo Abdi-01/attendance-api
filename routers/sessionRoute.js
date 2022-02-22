@@ -4,10 +4,10 @@ const router = require('express').Router()
 
 
 // ⚠️ HARUS DITAMBKAHKAN READTOKEN ⚠️ //
-router.get('/',sessionController.getSession)
-router.post('/',sessionController.addSession)
-router.patch('/:id',sessionController.editSession)
-router.delete('/:id',sessionController.deleteSession)
+router.get('/',readToken,sessionController.getSession)
+router.post('/',readToken,sessionController.addSession)
+router.patch('/:id',readToken,sessionController.editSession)
+router.delete('/:id',readToken,sessionController.deleteSession)
 
 
 module.exports = router

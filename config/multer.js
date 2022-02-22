@@ -40,7 +40,6 @@ module.exports = {
         });
 
         // membuat fungsi untuk filter tipe data
-
         const fileFilter = (req, file, cb) => {
             // extension file yang diperbolehkan untuk disimpan
             const extFilter = /\.(jpg|png|jpeg|webp)/
