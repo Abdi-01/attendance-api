@@ -13,11 +13,9 @@ App.use(bearerToken());
 
 const {db} = require('./config/database')
 db.getConnection((err,connection) => {
-
     if(err){
         console.log(`error mysql:`, err)
     }
-
     console.log(`connection to mysal server : ${connection.threadId}`) 
 })
 
