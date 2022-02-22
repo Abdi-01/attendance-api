@@ -20,7 +20,7 @@ module.exports = {
 
             let { _sort, _order, date_sort, date_order } = req.query
 
-            let getDataSQL = `SELECT u.*, s.session, s.time_in, s.time_out, r.role, st.status FROM attendance.users u
+            let getDataSQL = `SELECT u.*, s.session, s.timein, s.timeout, r.role, st.status FROM attendance.users u
             JOIN attendance.session s on s.idsession = u.idsession
             JOIN attendance.role r on r.idrole = u.idrole
             JOIN attendance.status as st on st.idstatus = u.idstatus 
@@ -61,13 +61,14 @@ module.exports = {
     },
   studentAttendance: async (req, res) => {
         try {
+            console.log(`dataStudent`,req.dataStudent.iduser)
             let { _sort, _order, status, start_date, end_date } = req.query
-            let getAttendance = `
+            let dataAttendance = `
             select a.date, a.check_in, a.check_out, s.status from attendance.attendance a
             join status s on a.idstatus=s.idstatus
-            where a.iduser=${req.params.id} ${start_date && end_date ? `and date between '${start_date}' and '${end_date}'` : ""}
+            where a.iduser=${req.dataStudent.iduser} ${start_date && end_date ? `and date between '${start_date}' and '${end_date}'` : ""}
             ${_sort && _order ? `order by ${_sort} ${_order}` : ""};`
-            let resultsAttendance = await dbQuery(getAttendance);
+            let resultsAttendance = await dbQuery(dataAttendance);
 
             res.status(200).send({
                 success: true,

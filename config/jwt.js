@@ -20,7 +20,7 @@ module.exports = {
                     success : false,
                 })
             }
-            // console.log('decode',decode);
+            console.log('decode',decode);
             req.dataStudent = decode;
             next()
         })
