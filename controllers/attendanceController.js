@@ -20,7 +20,7 @@ module.exports = {
 
             let { _sort, _order, date_sort, date_order } = req.query
 
-            let getDataSQL = `SELECT u.*, s.session, s.time_in, s.time_out, r.role, st.status FROM attendance.users u
+            let getDataSQL = `SELECT u.*, s.session, s.timein, s.timeout, r.role, st.status FROM attendance.users u
             JOIN attendance.session s on s.idsession = u.idsession
             JOIN attendance.role r on r.idrole = u.idrole
             JOIN attendance.status as st on st.idstatus = u.idstatus 
@@ -90,7 +90,7 @@ module.exports = {
             //get data session student yang sedang login
             let getStudent = await dbQuery(`select u.*, s.session, s.timein, s.timeout FROM users as u JOIN session as s ON u.idsession = s.idsession WHERE iduser=${db.escape(req.dataStudent.iduser)};`);
 
-            // console.log('isi getStudent', getStudent)
+            console.log('isi getStudent', getStudent)
             res.status(200).send({
                 message: 'success get data student',
                 success: true,
@@ -109,7 +109,7 @@ module.exports = {
         try {
             let getAttendance = await dbQuery(`SELECT * FROM attendance WHERE iduser=${db.escape(req.dataStudent.iduser)} AND date=${db.escape(req.params.date)}`)
             
-            // console.log('isi getAttendance =>', getAttendance)
+            console.log('isi getAttendance =>', getAttendance)
             res.status(200).send({
                 message: 'success get data attendance',
                 success: true,
