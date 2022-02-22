@@ -1,60 +1,161 @@
-const { db, dbQuery } = require(`../config/database`);
-const { uploader } = require("../config/multer");
-const fs = require("fs");
+const { db, dbQuery } = require('../config/database')
+
 
 module.exports = {
-
-    studentAttendance: async (req, res) => {
-
+   getData: async (req, res) => {
         try {
-            let filterQuery = [];
+
+            let filterQuery = []
 
             for (let prop in req.query) {
-                if (prop != "_sort" && prop != "_order") {
-                    if (prop != "start_date" && prop != "end_date") {
-                        filterQuery.push(`${prop == "date" ? `a.${prop}` : prop}=${db.escape(req.query[prop])}`)
-                    }
+                if (prop != "_sort" && prop != "_order" && prop == 'fullname') {
+                    filterQuery.push(`${prop == "fullname" ? `u.${prop}` : prop} LIKE '%${req.query[prop]}%'`)
+                } else if (prop != "_sort" && prop != "_order" && prop == 'nis') {
+                    filterQuery.push(`${prop == "fullname" ? `u.${prop}` : prop} LIKE '%${req.query[prop]}'`)
+
                 }
             }
 
-            // console.log(filterQuery)
+            console.log('query', filterQuery.join(' AND '))
 
+            let { _sort, _order, date_sort, date_order } = req.query
+
+            let getDataSQL = `SELECT u.*, s.session, s.time_in, s.time_out, r.role, st.status FROM attendance.users u
+            JOIN attendance.session s on s.idsession = u.idsession
+            JOIN attendance.role r on r.idrole = u.idrole
+            JOIN attendance.status as st on st.idstatus = u.idstatus 
+            ${filterQuery.length > 0 ? `WHERE ${filterQuery.join(' and ')}` : ""}
+            ${_sort && _order ? `ORDER BY ${_sort} ${_order}` : ""};`
+
+            console.log('querysql', getDataSQL)
+
+            resultsStudents = await dbQuery(getDataSQL)
+
+            let resultsAttendance = await dbQuery(`SELECT a.*, s.status FROM attendance.attendance a JOIN attendance.status s on s.idstatus = a.idstatus ${date_sort && date_order ? `ORDER BY ${date_sort} ${date_order}` : ""}`)
+            console.log('queryattendance', resultsAttendance)
+
+            resultsStudents.forEach((value) => {
+                value.attendance = [];
+
+                resultsAttendance.forEach(val => {
+                    if (value.iduser == val.iduser) {
+                        delete val.iduser
+                        value.attendance.push(val)
+                    }
+                })
+            })
+
+            res.status(200).send({
+                success: true,
+                message: "Get data attendance success",
+                dataStudents: resultsStudents,
+                error: ""
+            })
+           } catch (error) {
+            console.log(error)
+            res.status(500).send({
+                message: 'Failed',
+                success: false
+            })
+        }
+    },
+  studentAttendance: async (req, res) => {
+        try {
             let { _sort, _order, status, start_date, end_date } = req.query
-
-            // if (req.dataUser.role == 'student') {
             let getAttendance = `
-            select a.date, a.checkin, a.checkout, s.status from attendance a
+            select a.date, a.check_in, a.check_out, s.status from attendance.attendance a
             join status s on a.idstatus=s.idstatus
-            where a.iduser=3 ${start_date && end_date? `and date between '${start_date}' and '${end_date}'`:""}
+            where a.iduser=${req.params.id} ${start_date && end_date ? `and date between '${start_date}' and '${end_date}'` : ""}
             ${_sort && _order ? `order by ${_sort} ${_order}` : ""};`
-            
-            // where a.iduser=${req.dataUser.iduser} ${start_date && end_date? `and date between '${start_date}' and '${end_date}'`:""}
-            // order by date desc;`            
-            // let getAttendance = `
-            // select a.date, a.checkin, a.checkout, s.status from attendance a
-            // join status s on a.idstatus=s.idstatus
-            // where a.iduser=3 and date between '${start_date}' and '${end_date}' order by date desc;`
-
-
             let resultsAttendance = await dbQuery(getAttendance);
 
             res.status(200).send({
                 success: true,
                 message: `Get Attendance Success`,
-                getAttendance: resultsAttendance,
+                dataAttendance: resultsAttendance,
                 error: ``
             });
-            // } else {
-            //     res.status(401).send({
-            //         success: false,
-            //         message: "You can't access this API"
-            //     })
-            // }
         } catch (error) {
             res.status(500).send({
                 success: false,
                 message: `Failed`,
                 error: error
+            })
+        }
+    },
+    getSessionStudent: async (req, res) => {
+
+        try {
+
+            //get data session student yang sedang login
+            let getStudent = await dbQuery(`select u.*, s.session, s.timein, s.timeout FROM users as u JOIN sessions as s ON u.idsession = s.idsession WHERE iduser=1;`);
+
+            res.status(200).send({
+                message: 'success get data student',
+                success: true,
+                dataSessionStudent: getStudent
+            })
+        } catch (error) {
+            console.log(error)
+            res.status(500).send({
+                message: 'Failed',
+                success: false
+            })
+        }
+    },
+    checkIn: async (req, res) => {
+
+        try {
+
+            let { date, checkin } = req.body
+
+            //get data session student yang sedang login
+            let getStudent = await dbQuery(`select u.*, s.session, s.timein, s.timeout FROM users as u JOIN sessions as s ON u.idsession = s.idsession WHERE iduser=1;`);
+
+            //cek status berdasarkan waktu checkin dan timein
+            let idstatus = checkin <= getStudent[0].timein ? 3 : 4;
+
+            //insert data attendance
+            let sqlInsert = `INSERT INTO attendances VALUES (null,${db.escape(getStudent[0].iduser)}, ${db.escape(idstatus)},
+            ${db.escape(date)}, ${db.escape(checkin)},null);`
+
+            let InsertAttendance = await dbQuery(sqlInsert)
+
+            if (InsertAttendance.insertId) {
+
+                res.status(200).send({
+                    message: 'success insert attendance',
+                    success: true,
+                    data_IdAttendance: InsertAttendance.insertId
+                })
+            }
+        } catch (error) {
+            console.log(error)
+            res.status(500).send({
+                message: 'Failed',
+                success: false
+            })
+        }
+    },
+    checkOut: async (req, res) => {
+
+        try {
+
+            let { checkout } = req.body
+
+            //update kolom checkout
+            await dbQuery(`UPDATE attendances set checkout=${db.escape(checkout)} WHERE idattendance=${req.params.idattendance}`)
+
+            res.status(200).send({
+                message: 'success checkout',
+                success: true
+            })
+
+        } catch (error) {
+            console.log(error)
+            res.status(500).send({
+                message: 'Failed',
+                success: false
             })
         }
     }
