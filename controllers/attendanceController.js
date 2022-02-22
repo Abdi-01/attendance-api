@@ -20,10 +20,10 @@ module.exports = {
 
             let { _sort, _order, date_sort, date_order } = req.query
 
-            let getDataSQL = `SELECT u.*, s.session, s.time_in, s.time_out, r.role, st.status FROM attendance.users u
+            let getDataSQL = `SELECT u.*, s.session, s.timein, s.timeout, r.role, st.status FROM attendance.users u
             JOIN attendance.session s on s.idsession = u.idsession
             JOIN attendance.role r on r.idrole = u.idrole
-            JOIN attendance.status as st on st.idstatus = u.idstatus 
+            JOIN attendance.status as st on st.idstatus = u.idstatus WHERE role='student' 
             ${filterQuery.length > 0 ? `WHERE ${filterQuery.join(' and ')}` : ""}
             ${_sort && _order ? `ORDER BY ${_sort} ${_order}` : ""};`
 
