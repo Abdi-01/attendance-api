@@ -26,7 +26,7 @@ module.exports = {
                         let { nis, fullname, email, password, idsession, phone, age, address, filename, gender, idrole, idstatus } = JSON.parse(req.body.data)
                         let insertSQL = await dbQuery(`INSERT INTO users (iduser, nis, fullname, email, password, idsession, phone, age, address, photo, gender, idrole, idstatus) VALUES
                     (null,
-                    ${nis}, 
+                    ${db.escape(nis)}, 
                     ${db.escape(fullname)}, 
                     ${db.escape(email)}, 
                     ${db.escape(hashPassword(password))},
