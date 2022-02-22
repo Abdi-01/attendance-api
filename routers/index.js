@@ -1,7 +1,9 @@
-// your route
-
-const attendanceRoute = require('./attendanceRoute')
+const sessionRoute = require('./sessionRoute')
+const usersRoute = require('./usersRoute');
+const attendanceRoutes = require('./attendanceRoutes');
 
 module.exports = {
-    attendanceRoute
+    sessionRoute,
+   usersRoute,
+      attendanceRoutes
 }
