@@ -61,13 +61,14 @@ module.exports = {
     },
   studentAttendance: async (req, res) => {
         try {
+            console.log(`dataStudent`,req.dataStudent.iduser)
             let { _sort, _order, status, start_date, end_date } = req.query
-            let getAttendance = `
+            let dataAttendance = `
             select a.date, a.check_in, a.check_out, s.status from attendance.attendance a
             join status s on a.idstatus=s.idstatus
-            where a.iduser=${req.params.id} ${start_date && end_date ? `and date between '${start_date}' and '${end_date}'` : ""}
+            where a.iduser=${req.dataStudent.iduser} ${start_date && end_date ? `and date between '${start_date}' and '${end_date}'` : ""}
             ${_sort && _order ? `order by ${_sort} ${_order}` : ""};`
-            let resultsAttendance = await dbQuery(getAttendance);
+            let resultsAttendance = await dbQuery(dataAttendance);
 
             res.status(200).send({
                 success: true,
