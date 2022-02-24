@@ -5,7 +5,6 @@ const router = require ('express').Router()
 
 router.get('/', attendanceController.getData);
 router.get('/student', readToken, attendanceController.studentAttendance)
-router.get('/session', attendanceController.getSessionStudent);
 router.post('/checkin', attendanceController.checkIn);
 router.patch('/checkout/:idattendance', attendanceController.checkOut);
 router.get('/:date', readToken ,attendanceController.getAttendanceStudent);
