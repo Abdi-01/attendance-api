@@ -9,6 +9,7 @@ const PORT = process.env.PORT;
 
 App.use(cors());
 App.use(express.json());
+App.use(express.static('public'));
 App.use(bearerToken());
 
 const { db } = require('./config/database')

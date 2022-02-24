@@ -34,7 +34,7 @@ module.exports = {
                     ${db.escape(phone)},
                     ${age},
                     ${db.escape(address)},
-                    ${db.escape(`http://localhost:2500/imgProducts/${req.files[0].filename}`)},
+                    ${db.escape(`http://103.157.96.90:2500/imgProducts/${req.files[0].filename}`)},
                     ${db.escape(gender)},
                     ${idrole},
                     ${idstatus});`)
