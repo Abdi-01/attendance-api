@@ -16,7 +16,7 @@ db.getConnection((err, connection) => {
     if (err) {
         console.log(`error mysql:`, err)
     }
-    console.log(`connection to mysal server : ${connection.threadId}`)
+    console.log(`connection to mysql server : ${connection.threadId}`)
 })
 
 App.get("/", (req, res) => {
