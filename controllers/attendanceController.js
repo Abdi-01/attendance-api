@@ -130,7 +130,7 @@ module.exports = {
         try {
 
             let { date, checkin } = req.body
-
+            //fix bug
             //get data session student yang sedang login
             let getStudent = await dbQuery(`select u.*, s.session, s.timein, s.timeout FROM users as u JOIN session as s ON u.idsession = s.idsession WHERE iduser=${db.escape(req.dataStudent.iduser)};`);
 
