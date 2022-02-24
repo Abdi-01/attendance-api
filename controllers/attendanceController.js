@@ -24,7 +24,7 @@ module.exports = {
             JOIN attendance.session s on s.idsession = u.idsession
             JOIN attendance.role r on r.idrole = u.idrole
             JOIN attendance.status as st on st.idstatus = u.idstatus WHERE role='student' 
-            ${filterQuery.length > 0 ? `WHERE ${filterQuery.join(' and ')}` : ""}
+            ${filterQuery.length > 0 ? `AND ${filterQuery.join(' and ')}` : ""}
             ${_sort && _order ? `ORDER BY ${_sort} ${_order}` : ""};`
 
             console.log('querysql', getDataSQL)
