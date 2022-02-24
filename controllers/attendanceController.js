@@ -2,7 +2,7 @@ const { db, dbQuery } = require('../config/database')
 
 
 module.exports = {
-   getData: async (req, res) => {
+    getData: async (req, res) => {
         try {
 
             let filterQuery = []
@@ -51,7 +51,7 @@ module.exports = {
                 dataStudents: resultsStudents,
                 error: ""
             })
-           } catch (error) {
+        } catch (error) {
             console.log(error)
             res.status(500).send({
                 message: 'Failed',
@@ -59,9 +59,9 @@ module.exports = {
             })
         }
     },
-  studentAttendance: async (req, res) => {
+    studentAttendance: async (req, res) => {
         try {
-            console.log(`dataStudent`,req.dataStudent.iduser)
+            console.log(`dataStudent`, req.dataStudent.iduser)
             let { _sort, _order, status, start_date, end_date } = req.query
             let dataAttendance = `
             select a.date, a.check_in, a.check_out, s.status from attendance.attendance a
@@ -105,11 +105,11 @@ module.exports = {
             })
         }
     },
-    getAttendanceStudent : async (req,res) => {
+    getAttendanceStudent: async (req, res) => {
 
         try {
             let getAttendance = await dbQuery(`SELECT * FROM attendance WHERE iduser=${db.escape(req.dataStudent.iduser)} AND date=${db.escape(req.params.date)}`)
-            
+
             console.log('isi getAttendance =>', getAttendance)
             res.status(200).send({
                 message: 'success get data attendance',
