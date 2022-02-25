@@ -84,33 +84,9 @@ module.exports = {
             })
         }
     },
-    getSessionStudent: async (req, res) => {
-
+    getAttendanceStudent : async (req,res) => {
         try {
-
-            //get data session student yang sedang login
-            let getStudent = await dbQuery(`select u.*, s.session, s.timein, s.timeout FROM users as u JOIN session as s ON u.idsession = s.idsession WHERE iduser=${db.escape(req.dataStudent.iduser)};`);
-
-            console.log('isi getStudent', getStudent)
-            res.status(200).send({
-                message: 'success get data student',
-                success: true,
-                dataSessionStudent: getStudent
-            })
-        } catch (error) {
-            console.log(error)
-            res.status(500).send({
-                message: 'Failed',
-                success: false
-            })
-        }
-    },
-    getAttendanceStudent: async (req, res) => {
-
-        try {
-            let getAttendance = await dbQuery(`SELECT * FROM attendance WHERE iduser=${db.escape(req.dataStudent.iduser)} AND date=${db.escape(req.params.date)}`)
-
-            console.log('isi getAttendance =>', getAttendance)
+            let getAttendance = await dbQuery(`SELECT u.*, a.check_in, a.check_out FROM users as u JOIN attendance as a ON u.iduser = a.iduser WHERE a.iduser=${req.dataStudent.iduser} AND date=${db.escape(req.params.date)}`)
             res.status(200).send({
                 message: 'success get data attendance',
                 success: true,
@@ -130,7 +106,6 @@ module.exports = {
         try {
 
             let { date, checkin } = req.body
-            //fix bug
             //get data session student yang sedang login
             let getStudent = await dbQuery(`select u.*, s.session, s.timein, s.timeout FROM users as u JOIN session as s ON u.idsession = s.idsession WHERE iduser=${db.escape(req.dataStudent.iduser)};`);
 
