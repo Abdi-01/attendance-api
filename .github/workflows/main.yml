@@ -18,7 +18,7 @@ jobs :
         with:
           host: 103.157.96.90
           username: root
-          key: ${{screts.SSH_KEY}}
+          key: ${{secrets.SSH_KEY}}
           port: 22
           script: |
             cd attendance-api
