@@ -1,0 +1,30 @@
+# Konfigurasi Continuos Deployment
+name : CD Attendance API
+
+on : 
+  push :
+    branches :
+      - develop
+      
+jobs :
+  cd:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Deploy Attendance API with github action
+        uses: appleboy/ssh-action@master
+        with:
+          host: 103.157.96.90
+          username: root
+          key: ${{screts.SSH_KEY}}
+          port: 22
+          script: |
+            cd attendance-api
+            git checkout develop
+            git add .
+            git commit -m "server update file"
+            git pull origin develop
+            npm install
+            pm2 restart attendance-api-jcwd1902
